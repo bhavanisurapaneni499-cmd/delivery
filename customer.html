@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Track Delivery</title>
+  <style>
+    #map {
+      height: 90vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>🛵 Live Delivery Tracking</h2>
+  <div id="map"></div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    let map, marker;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: { lat: 17.385044, lng: 78.486671 } // Default Hyderabad
+      });
+
+      marker = new google.maps.Marker({
+        map: map,
+        title: "Delivery Boy"
+      });
+    }
+
+    const socket = io("http://localhost:5000");
+
+    socket.on("receiveLocation", (data) => {
+      const position = new google.maps.LatLng(data.lat, data.lng);
+      marker.setPosition(position);
+      map.setCenter(position);
+    });
+  </script>
+
+  <!-- 🔑 Replace YOUR_API_KEY -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiAleEuqJNgXWQTe2SCguTg9hpEEsM718&callback=initMap"
+    async defer>
+  </script>
+</body>
+</html>

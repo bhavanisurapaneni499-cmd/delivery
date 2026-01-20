@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Delivery Boy</title>
+</head>
+<body>
+  <h2>📍 Delivery Boy Location Sharing</h2>
+  <button onclick="startTracking()">Start Delivery</button>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io("http://localhost:5000");
+
+    function startTracking() {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (position) => {
+            const location = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            socket.emit("sendLocation", location);
+          },
+          (error) => {
+            alert("Location access denied");
+          },
+          {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 5000
+          }
+        );
+      }
+    }
+  </script>
+</body>
+</html>
